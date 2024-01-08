@@ -6,3 +6,4 @@ Opinionated command line tool for previewing markdown files. Built as a learning
 
 - [ ] Embed font files to ensure consistency across browsers and operating systems
 - [ ] Add tests
+- [ ] Add build & usage instructions
