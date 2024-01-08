@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"embed"
 	"errors"
 	"fmt"
 	"html/template"
@@ -16,10 +15,9 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
 	flag "github.com/spf13/pflag"
-)
 
-//go:embed "web"
-var fs embed.FS
+	"mdp/web"
+)
 
 func main() {
 	var (
@@ -85,7 +83,7 @@ func convertToHTML(inputFilename, templateFilename string) ([]byte, error) {
 		tmpl, err = template.ParseFiles(templateFilename)
 	} else {
 		// Default, embedded template file
-		tmpl, err = template.ParseFS(fs, "web/template/default.tmpl")
+		tmpl, err = template.ParseFS(web.FS, "template/default.tmpl")
 	}
 	if err != nil {
 		return nil, fmt.Errorf("convertToHTML(): %w", err)
