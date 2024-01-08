@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }}</title>
+  <style>
+    :root {
+      color-scheme: light;
+
+      --fg-0: #000000;
+      --fg-1: #353535;
+      --fg-2: #696969;
+      --bg-0: #FFFFFF;
+      --bg-1: #F5F5F5;
+      --bg-2: #EAEAEA;
+
+      --pad-0: 8px;
+      --pad-1: calc(var(--pad-0) * 2);
+      --pad-2: calc(var(--pad-0) * 4);
+      --pad-3: calc(var(--pad-0) * 8);
+    }
+
+    html {
+      font-size: 1.125rem;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+    }
+
+    body {
+      background-color: var(--bg-0);
+      color: var(--fg-1);
+      display: flex;
+      flex-direction: column;
+      /* TODO: embed and serve fonts */
+      font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
+      line-height: 1.45;
+      margin: 0 auto;
+      max-width: 67ch;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: var(--fg-0);
+      /* TODO: embed and serve fonts */
+      font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+      line-height: 1.2;
+      margin: 1.4em 0 0.7em;
+    }
+
+    p {
+      margin: 0.8em 0;
+    }
+
+    code {
+      background-color: var(--bg-1);
+      border: 1px solid var(--bg-2);
+      border-radius: 3px;
+      font-size: smaller;
+      padding: 1px 4px 0px;
+      /* TODO: embed and serve fonts */
+      font-family: 'JetBrains Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+      font-weight: bold;
+    }
+
+    pre {
+      background-color: var(--bg-1);
+      border: 1px solid var(--bg-2);
+      border-radius: 3px;
+      line-height: 1.3;
+      padding: var(--pad-1);
+      overflow-x: scroll;
+    }
+
+    pre code {
+      border: none;
+      padding: initial;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: var(--pad-2) var(--pad-1);
+    }
+
+    main *:first-child {
+      margin-top: -7px;
+    }
+
+    main h1:first-child {
+      margin-top: -9px;
+    }
+
+    main *:last-child {
+      margin-bottom: -6px;
+    }
+
+    footer {
+      color: var(--fg-2);
+      /* TODO: embed and serve fonts */
+      font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+      font-weight: bold;
+      font-size: small;
+      padding: var(--pad-2) var(--pad-1);
+    }
+
+    footer div {
+      line-height: 1;
+      margin: -1px 0;
+    }
+
+    @media screen and (min-width: 600px) {
+      :root {
+        --pad-0: 10px;
+      }
+
+      html {
+        font-size: 1.1875rem;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+
+        --fg-0: #FFFFFF;
+        --fg-1: #CCCCCC;
+        --fg-2: #999999;
+        --bg-0: #1D1D1D;
+        --bg-1: #282828;
+        --bg-2: #323232;
+      }
+
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    {{ .Body }}
+  </main>
+
+  <footer>
+    <div>Preview built with <a href="https://github.com">MDP</a></div>
+  </footer>
+</body>
+
+</html>
