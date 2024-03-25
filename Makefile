@@ -8,7 +8,7 @@ help:
 confirm:
 	@echo -n 'Are you sure? [y/N]' && read ans && [ $${ans:-N} = y ]
 
-## start: serve website
+## start: run markdown preview with example.md
 .PHONY: start
 start:
 	@go run ./cmd/mdp/ -f ./example.md
