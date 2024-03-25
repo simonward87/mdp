@@ -7,44 +7,72 @@
   <title>{{ .Title }}</title>
   <style>
     :root {
-      color-scheme: light;
+      color-scheme: only light;
 
-      --fg-0: #000000;
-      --fg-1: #353535;
-      --fg-2: #696969;
-      --bg-0: #FFFFFF;
-      --bg-1: #F5F5F5;
-      --bg-2: #EAEAEA;
+      /* foreground */
+      --clr-fg-0: #000000;
+      --clr-fg-1: #353535;
+      --clr-fg-2: #696969;
 
-      --pad-0: 8px;
-      --pad-1: calc(var(--pad-0) * 2);
-      --pad-2: calc(var(--pad-0) * 4);
-      --pad-3: calc(var(--pad-0) * 8);
+      /* background */
+      --clr-bg-0: #FFFFFF;
+      --clr-bg-1: #F5F5F5;
+      --clr-bg-2: #EAEAEA;
+
+      /* padding */
+      --spc-pad-0: 8px;
+      --spc-pad-1: calc(var(--spc-pad-0) * 2);
+      --spc-pad-2: calc(var(--spc-pad-0) * 4);
+      --spc-pad-3: calc(var(--spc-pad-0) * 8);
+
+      --doc-width: 64ch;
     }
 
-    html {
-      font-size: 1.125rem;
+    /* Set root defaults */
+    html:focus-within {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--spc-3);
     }
 
     *,
     *::before,
     *::after {
       box-sizing: border-box;
-      overflow-wrap: break-word;
+    }
+
+    /* Make images easier to work with */
+    img,
+    picture {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* Inherit fonts for inputs and buttons */
+    input,
+    button,
+    textarea,
+    select {
+      font: inherit;
     }
 
     body {
-      background-color: var(--bg-0);
-      color: var(--fg-1);
+      background-color: var(--clr-bg-0);
+      color: var(--clr-fg-1);
       display: flex;
       flex-direction: column;
-      /* TODO: embed and serve fonts */
       font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-      line-height: 1.45;
+      font-size: 1.0625rem;
+      line-height: 1.4;
       margin: 0 auto;
-      max-width: 67ch;
+      max-width: var(--doc-width);
       min-height: 100vh;
-      min-height: 100dvh;
+      overflow-wrap: break-word;
+    }
+
+    @supports(min-height: 100dvh) {
+      body {
+        min-height: 100dvh;
+      }
     }
 
     h1,
@@ -53,98 +81,116 @@
     h4,
     h5,
     h6 {
-      color: var(--fg-0);
-      /* TODO: embed and serve fonts */
+      color: var(--clr-fg-0);
       font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
       line-height: 1.2;
-      margin: 1.4em 0 0.7em;
+      margin-block: 1.4em 0.7em;
     }
 
     p {
-      margin: 0.8em 0;
+      margin-block: 0.8em;
     }
 
     code {
-      background-color: var(--bg-1);
-      border: 1px solid var(--bg-2);
+      background-color: var(--clr-bg-1);
       border-radius: 3px;
-      font-size: smaller;
+      border: 1px solid var(--clr-bg-2);
+      font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+      font-size: 0.875rem;
+      font-weight: normal;
       padding: 1px 4px 0px;
-      /* TODO: embed and serve fonts */
-      font-family: 'JetBrains Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-      font-weight: bold;
     }
 
     pre {
-      background-color: var(--bg-1);
-      border: 1px solid var(--bg-2);
+      background-color: var(--clr-bg-1);
       border-radius: 3px;
+      border: 1px solid var(--clr-bg-2);
       line-height: 1.3;
-      padding: var(--pad-1);
       overflow-x: scroll;
+      padding: var(--spc-pad-1);
     }
 
     pre code {
+      background-color: initial;
       border: none;
       padding: initial;
     }
 
+    strong {
+      color: var(--clr-fg-0);
+    }
+
     main {
       flex-grow: 1;
-      padding: var(--pad-2) var(--pad-1);
+      padding: var(--spc-pad-2) var(--spc-pad-1);
     }
 
-    main *:first-child {
-      margin-top: -7px;
+    main> :first-child {
+      margin-top: -0.22em;
     }
 
-    main h1:first-child {
-      margin-top: -9px;
-    }
-
-    main *:last-child {
-      margin-bottom: -6px;
+    main> :last-child {
+      margin-bottom: -0.22em;
     }
 
     footer {
-      color: var(--fg-2);
-      /* TODO: embed and serve fonts */
+      color: var(--clr-fg-2);
       font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
-      font-weight: bold;
       font-size: small;
-      padding: var(--pad-2) var(--pad-1);
+      font-weight: bold;
+      padding: var(--spc-pad-2) var(--spc-pad-1);
     }
 
     footer div {
       line-height: 1;
-      margin: -1px 0;
+      margin-block: -1px;
     }
 
     @media screen and (min-width: 600px) {
       :root {
-        --pad-0: 10px;
+        --spc-pad-0: 10px;
       }
 
       html {
-        font-size: 1.1875rem;
+        font-size: 1.0625rem;
       }
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        color-scheme: dark;
+        color-scheme: only dark;
 
-        --fg-0: #FFFFFF;
-        --fg-1: #CCCCCC;
-        --fg-2: #999999;
-        --bg-0: #1D1D1D;
-        --bg-1: #282828;
-        --bg-2: #323232;
+        /* foreground */
+        --clr-fg-0: #FFFFFF;
+        --clr-fg-1: #CCCCCC;
+        --clr-fg-2: #999999;
+
+        /* background */
+        --clr-bg-0: #1D1D1D;
+        --clr-bg-1: #282828;
+        --clr-bg-2: #323232;
       }
 
       body {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+      }
+    }
+
+    /* Remove all animations, transitions and smooth scroll for people */
+    /* that prefer not to see them */
+    @media (prefers-reduced-motion: reduce) {
+      html:focus-within {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
@@ -154,9 +200,10 @@
   <main>
     {{ .Body }}
   </main>
-
   <footer>
-    <div>Preview built with <a href="https://github.com">MDP</a></div>
+    <div>
+      Preview built with <a href="https://github.com/simonward87/mdp">MDP</a>
+    </div>
   </footer>
 </body>
 
