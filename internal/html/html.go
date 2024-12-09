@@ -31,7 +31,7 @@ func Convert(inputFilename, templateFilename string) ([]byte, error) {
 		t, err = template.ParseFiles(templateFilename)
 	} else {
 		// Default embedded template
-		t, err = template.ParseFS(web.FS, "template/default.tmpl")
+		t, err = template.ParseFS(web.FS, "template/default.min.tmpl")
 	}
 	if err != nil {
 		return nil, err

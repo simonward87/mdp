@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,6 +67,7 @@
       min-height: 100vh;
       overflow-wrap: break-word;
     }
+
     @supports(min-height: 100dvh) {
       body {
         min-height: 100dvh;
@@ -201,19 +203,29 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
-        text-rendering: geometricPrecision;
         transition-duration: 0.01ms !important;
+      }
+
+      @supports (text-rendering: geometricPrecision) {
+
+        *,
+        ::before,
+        ::after {
+          text-rendering: geometricPrecision;
+        }
       }
     }
   </style>
 </head>
+
 <body>
   <main>
     {{ .Body }}
   </main>
   <footer>
     <div>
-      Preview built with <a href="https://github.com/simonward87/mdp">MDP</a> &copy; <span class="current-year">2024</span>. All rights reserved.
+      Preview built with <a href="https://github.com/simonward87/mdp">MDP</a> &copy; <span
+        class="current-year">2024</span>. All rights reserved.
     </div>
   </footer>
 
@@ -232,4 +244,5 @@
     });
   </script>
 </body>
+
 </html>
