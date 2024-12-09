@@ -196,26 +196,40 @@
       }
 
       *,
-      *::before,
-      *::after {
+      ::before,
+      ::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
+        text-rendering: geometricPrecision;
         transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
-
 <body>
   <main>
     {{ .Body }}
   </main>
   <footer>
     <div>
-      Preview built with <a href="https://github.com/simonward87/mdp">MDP</a>
+      Preview built with <a href="https://github.com/simonward87/mdp">MDP</a> &copy; <span class="current-year">2024</span>. All rights reserved.
     </div>
   </footer>
-</body>
 
+  <script>
+    function setFooterYear() {
+      const year = document.querySelector("footer .current-year");
+      if (!year) {
+        console.warn("setFooterYear: Node 'footer .current-year' does not exist!");
+        return;
+      }
+      year.textContent = new Date().getFullYear();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      setFooterYear();
+    });
+  </script>
+</body>
 </html>
