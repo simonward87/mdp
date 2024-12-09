@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,28 +14,29 @@
       --clr-fg-2: #696969;
 
       /* background */
-      --clr-bg-0: #FFFFFF;
-      --clr-bg-1: #F5F5F5;
-      --clr-bg-2: #EAEAEA;
+      --clr-bg-0: #ffffff;
+      --clr-bg-1: #f5f5f5;
+      --clr-bg-2: #eaeaea;
 
       /* padding */
-      --spc-pad-0: 8px;
-      --spc-pad-1: calc(var(--spc-pad-0) * 2);
-      --spc-pad-2: calc(var(--spc-pad-0) * 4);
-      --spc-pad-3: calc(var(--spc-pad-0) * 8);
+      --spc-0: 0.3125rem;
+      --spc-1: calc(var(--spc-0) * 2);
+      --spc-2: calc(var(--spc-0) * 4);
+      --spc-3: calc(var(--spc-0) * 8);
+      --spc-4: calc(var(--spc-0) * 16);
 
-      --doc-width: 64ch;
+      --doc-width: 43.125rem;
     }
 
     /* Set root defaults */
     html:focus-within {
       scroll-behavior: smooth;
-      scroll-padding-top: var(--spc-3);
+      scroll-padding-top: var(--spc-4);
     }
 
     *,
-    *::before,
-    *::after {
+    ::before,
+    ::after {
       box-sizing: border-box;
     }
 
@@ -60,19 +60,25 @@
       color: var(--clr-fg-1);
       display: flex;
       flex-direction: column;
-      font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-      font-size: 1.0625rem;
-      line-height: 1.4;
+      font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
       margin: 0 auto;
       max-width: var(--doc-width);
       min-height: 100vh;
       overflow-wrap: break-word;
     }
-
     @supports(min-height: 100dvh) {
       body {
         min-height: 100dvh;
       }
+    }
+
+    p,
+    ul,
+    ol {
+      font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
+      font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+      line-height: 1.45;
+      margin-block: var(--spc-1);
     }
 
     h1,
@@ -83,12 +89,32 @@
     h6 {
       color: var(--clr-fg-0);
       font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
-      line-height: 1.2;
-      margin-block: 1.4em 0.7em;
+      line-height: calc(0.85rem + 0.8em);
+      margin-block: 1.25em 0.625em;
     }
 
-    p {
-      margin-block: 0.8em;
+    h1 {
+      font-size: clamp(2rem, 1.5rem + 2.5vw, 2.5rem);
+    }
+
+    h2 {
+      font-size: clamp(1.75rem, 1.5rem + 1.25vw, 2rem);
+    }
+
+    h3 {
+      font-size: clamp(1.5rem, 1.25rem + 1.25vw, 1.75rem);
+    }
+
+    h4 {
+      font-size: clamp(1.34375rem, 1.1875rem + 0.7813vw, 1.5rem);
+    }
+
+    h5 {
+      font-size: clamp(1.15625rem, 0.9688rem + 0.9375vw, 1.34375rem);
+    }
+
+    h6 {
+      font-size: clamp(1rem, 0.8438rem + 0.7813vw, 1.15625rem);
     }
 
     code {
@@ -105,9 +131,10 @@
       background-color: var(--clr-bg-1);
       border-radius: 3px;
       border: 1px solid var(--clr-bg-2);
-      line-height: 1.3;
+      line-height: 1.2;
+      margin-block: var(--spc-2);
       overflow-x: scroll;
-      padding: var(--spc-pad-1);
+      padding: var(--spc-2);
     }
 
     pre code {
@@ -122,7 +149,7 @@
 
     main {
       flex-grow: 1;
-      padding: var(--spc-pad-2) var(--spc-pad-1);
+      padding: var(--spc-3) var(--spc-2);
     }
 
     main> :first-child {
@@ -135,10 +162,9 @@
 
     footer {
       color: var(--clr-fg-2);
-      font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
-      font-size: small;
-      font-weight: bold;
-      padding: var(--spc-pad-2) var(--spc-pad-1);
+      font-size: clamp(0.75rem, 0.6875rem + 0.3125vw, 0.8125rem);
+      font-weight: 500;
+      padding: var(--spc-3) var(--spc-2);
     }
 
     footer div {
@@ -146,34 +172,19 @@
       margin-block: -1px;
     }
 
-    @media screen and (min-width: 600px) {
-      :root {
-        --spc-pad-0: 10px;
-      }
-
-      html {
-        font-size: 1.0625rem;
-      }
-    }
-
     @media (prefers-color-scheme: dark) {
       :root {
         color-scheme: only dark;
 
         /* foreground */
-        --clr-fg-0: #FFFFFF;
-        --clr-fg-1: #CCCCCC;
+        --clr-fg-0: #ffffff;
+        --clr-fg-1: #cccccc;
         --clr-fg-2: #999999;
 
         /* background */
-        --clr-bg-0: #1D1D1D;
+        --clr-bg-0: #1d1d1d;
         --clr-bg-1: #282828;
         --clr-bg-2: #323232;
-      }
-
-      body {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
       }
     }
 
