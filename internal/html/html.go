@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
@@ -26,26 +27,29 @@ func Convert(inputFilename, templateFilename string) ([]byte, error) {
 	var err error
 	var t *template.Template
 
-	if templateFilename != "" {
-		// User-provided template
+	switch templateFilename {
+	case "": // embedded template
+		templateFilename = "template/default.min.tmpl"
+		t, err = template.ParseFS(web.FS, templateFilename)
+	default: // user-provided template
 		t, err = template.ParseFiles(templateFilename)
-	} else {
-		// Default embedded template
-		t, err = template.ParseFS(web.FS, "template/default.min.tmpl")
 	}
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("parse %s: %w", templateFilename, err)
 	}
 
 	markdown, err := os.ReadFile(inputFilename)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("read file %s: %w", inputFilename, err)
 	}
+
 	body := generateHTML(markdown)
-	err = t.Execute(&buf, map[string]any{
+	if err = t.Execute(&buf, map[string]any{
 		"Title": "Markdown Preview Tool",
 		"Body":  template.HTML(body),
-	})
+	}); err != nil {
+		err = fmt.Errorf("execute template: %w", err)
+	}
 
 	return buf.Bytes(), err
 }
@@ -57,15 +61,21 @@ func generateHTML(markdown []byte) []byte {
 // CreateFile takes HTML data and writes to a file with a generated
 // filename. The filename and filepath is then printed to stdout.
 func CreateFile(data []byte) error {
-	file, err := os.CreateTemp("", "mdp*.html")
+	f, err := os.CreateTemp("", "mdp*.html")
 	if err != nil {
-		return err
+		return fmt.Errorf("create temp file: %w", err)
 	}
-	if err = file.Close(); err != nil {
-		return err
+
+	if err = f.Close(); err != nil {
+		return fmt.Errorf("close file: %w", err)
 	}
-	defer fmt.Println(file.Name())
-	return os.WriteFile(file.Name(), data, 0644)
+
+	if err = os.WriteFile(f.Name(), data, 0644); err != nil {
+		return fmt.Errorf("write file: %w", err)
+	}
+
+	fmt.Println(f.Name())
+	return nil
 }
 
 // Preview takes data, the HTML byte slice, and done, a channel to signal
@@ -75,45 +85,56 @@ func CreateFile(data []byte) error {
 // signals to the main thread that it can safely exit.
 func Preview(data []byte, done chan<- error) error {
 	// Define OS-specific command
-	command := defineCommand()
-	if command.executable == "" {
+	cmd := defineCommand()
+	if cmd.executable == "" {
 		return errors.New("OS not supported")
 	}
 
 	// Locate executable in PATH
-	commandPath, err := exec.LookPath(command.executable)
+	cmdPath, err := exec.LookPath(cmd.executable)
 	if err != nil {
-		return err
+		return fmt.Errorf("search for executable: %w", err)
 	}
 
 	// Open listener so the browser knows to wait for a response
 	l, err := net.Listen("tcp", "localhost:")
 	if err != nil {
-		return err
+		return fmt.Errorf("announce on local network address: %w", err)
 	}
 
-	// Launch browser and navigate to the listen address
-	command.params = append(command.params, fmt.Sprintf(
+	cmd.params = append(cmd.params, fmt.Sprintf(
 		"http://%s",
 		l.Addr().String(),
 	))
-	err = exec.Command(commandPath, command.params...).Run()
-	if err != nil {
-		return err
+
+	// Launch browser and navigate to the listen address
+	if err = exec.Command(cmdPath, cmd.params...).Run(); err != nil {
+		return fmt.Errorf(
+			"execute command '%s %s': %w",
+			cmdPath,
+			strings.Join(cmd.params, " "),
+			err,
+		)
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Closing this channel sends a signal that the request has
-		// been sent a response – main() will then teardown the server
-		// and exit
+		var err error
+		// Closing done sends a signal that the request has been handled,
+		// allowing main to teardown the server and exit
 		defer close(done)
-		if _, err := w.Write(data); err != nil {
-			done <- err
+		if _, err = w.Write(data); err != nil {
+			err = fmt.Errorf("write HTTP response: %w", err)
 		}
+		done <- err
 	})
 
 	go func() {
+		// Potential race condition? err could be nil when checked
+		// by the main thread, even if it will actually error?
 		err = http.Serve(l, nil)
+		if err != nil {
+			err = fmt.Errorf("serve HTTP: %w", err)
+		}
 	}()
 
 	return err

@@ -13,31 +13,29 @@ import (
 
 func main() {
 	if err := run(); err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
 func run() error {
-	var (
-		markdownFile = flag.StringP("file", "f", "", "Markdown file to preview")
-		skipPreview  = flag.BoolP("skip-preview", "s", false, "Skip auto-preview and output to a file")
-		templateFile = flag.StringP("template", "t", "", "Alternate template file")
-	)
+	file := flag.StringP("file", "f", "", "Markdown file to preview")
+	skip := flag.BoolP("skip-preview", "s", false, "Skip preview and output to a file")
+	tFile := flag.StringP("template", "t", "", "Custom template file")
 	flag.Parse()
 
 	// When no filename is provided, display usage
-	if *markdownFile == "" {
+	if *file == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	data, err := html.Convert(*markdownFile, *templateFile)
+	data, err := html.Convert(*file, *tFile)
 	if err != nil {
-		return fmt.Errorf("html.ConvertToHTML: %w", err)
+		return fmt.Errorf("html.Convert: %w", err)
 	}
 
-	if *skipPreview {
+	if *skip {
 		if err := html.CreateFile(data); err != nil {
 			return fmt.Errorf("html.CreateFile: %w", err)
 		}
