@@ -8,7 +8,6 @@ Template is manually minified using an [online minifier](https://go.tacodewolff.
 
 ## To-do
 
-- [ ] Escape HTML before rendering
 - [ ] Embed font files to ensure consistency across browsers and operating systems
 - [ ] Provide local font-face source, so local fonts can be used when available
 - [ ] Implement `--host` option to allow connection to stay open

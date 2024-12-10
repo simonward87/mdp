@@ -14,6 +14,8 @@ import (
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
+	"github.com/tdewolff/minify/v2"
+	"github.com/tdewolff/minify/v2/html"
 
 	"mdp/web"
 )
@@ -43,10 +45,14 @@ func Convert(inputFilename, templateFilename string) ([]byte, error) {
 		return nil, fmt.Errorf("read file %s: %w", inputFilename, err)
 	}
 
-	body := generateHTML(markdown)
+	content, err := generateHTML(markdown)
+	if err != nil {
+		return nil, fmt.Errorf("generate HTML: %w", err)
+	}
+
 	if err = t.Execute(&buf, map[string]any{
 		"Title": "Markdown Preview Tool",
-		"Body":  template.HTML(body),
+		"Body":  template.HTML(content),
 	}); err != nil {
 		err = fmt.Errorf("execute template: %w", err)
 	}
@@ -54,8 +60,25 @@ func Convert(inputFilename, templateFilename string) ([]byte, error) {
 	return buf.Bytes(), err
 }
 
-func generateHTML(markdown []byte) []byte {
-	return bluemonday.UGCPolicy().SanitizeBytes(blackfriday.Run(markdown))
+func generateHTML(markdown []byte) ([]byte, error) {
+	b := bluemonday.UGCPolicy().SanitizeBytes(markdown)
+	if len(b) == 0 {
+		return nil, errors.New("sanitize: malformed input")
+	}
+
+	b = blackfriday.Run(b)
+	if len(b) == 0 {
+		return nil, errors.New("render: malformed input")
+	}
+
+	m := minify.New()
+	m.AddFunc("text/html", html.Minify)
+
+	out, err := m.Bytes("text/html", b)
+	if err != nil {
+		return nil, fmt.Errorf("minify: %w", err)
+	}
+	return out, nil
 }
 
 // CreateFile takes HTML data and writes to a file with a generated
