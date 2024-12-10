@@ -78,12 +78,12 @@ func CreateFile(data []byte) error {
 	return nil
 }
 
-// Preview takes data, the HTML byte slice, and done, a channel to signal
+// Preview takes data, the HTML byte slice, and errChan, a channel to signal
 // completion. It creates a server, and serves the HTML on a dynamically
 // assigned port – and then launches a browser, and navigates to that
-// port. Once the server has sent the HTML response, done is closed and
-// signals to the main thread that it can safely exit.
-func Preview(data []byte, done chan<- error) error {
+// port. Once the server has sent the HTML response, errChan signals to
+// the main thread that it can safely exit.
+func Preview(data []byte, errChan chan<- error) error {
 	// Define OS-specific command
 	cmd := defineCommand()
 	if cmd.executable == "" {
@@ -117,27 +117,22 @@ func Preview(data []byte, done chan<- error) error {
 		)
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		var err error
-		// Closing done sends a signal that the request has been handled,
-		// allowing main to teardown the server and exit
-		defer close(done)
-		if _, err = w.Write(data); err != nil {
-			err = fmt.Errorf("write HTTP response: %w", err)
-		}
-		done <- err
-	})
-
 	go func() {
-		// Potential race condition? err could be nil when checked
-		// by the main thread, even if it will actually error?
-		err = http.Serve(l, nil)
-		if err != nil {
-			err = fmt.Errorf("serve HTTP: %w", err)
+		m := http.NewServeMux()
+		m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_, err = w.Write(data)
+			if err != nil {
+				err = fmt.Errorf("write HTTP response: %w", err)
+			}
+			errChan <- err
+		})
+		if err := http.Serve(l, m); err != nil {
+			errChan <- fmt.Errorf("serve HTTP: %w", err)
 		}
 	}()
 
-	return err
+	return nil
 }
 
 type command struct {

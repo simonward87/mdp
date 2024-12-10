@@ -18,36 +18,47 @@ func main() {
 	}
 }
 
+type Options struct {
+	skipPreview  bool
+	targetFile   string
+	templateFile string
+}
+
 func run() error {
-	file := flag.StringP("file", "f", "", "Markdown file to preview")
-	skip := flag.BoolP("skip-preview", "s", false, "Skip preview and output to a file")
-	tFile := flag.StringP("template", "t", "", "Custom template file")
+	opts := Options{}
+
+	flag.StringVarP(&opts.targetFile, "file", "f", "", "Markdown file to preview")
+	flag.BoolVarP(&opts.skipPreview, "skip-preview", "s", false, "Skip preview and output to a file")
+	flag.StringVarP(&opts.templateFile, "template", "t", "", "Custom template file")
 	flag.Parse()
 
-	// When no filename is provided, display usage
-	if *file == "" {
+	// When no target filename provided, display usage
+	if opts.targetFile == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	data, err := html.Convert(*file, *tFile)
+	data, err := html.Convert(opts.targetFile, opts.templateFile)
 	if err != nil {
 		return fmt.Errorf("html.Convert: %w", err)
 	}
 
-	if *skip {
+	if opts.skipPreview {
 		if err := html.CreateFile(data); err != nil {
 			return fmt.Errorf("html.CreateFile: %w", err)
 		}
 		return nil
 	}
 
-	done := make(chan error)
-	if err := html.Preview(data, done); err != nil {
+	errChan := make(chan error)
+	defer close(errChan)
+
+	if err := html.Preview(data, errChan); err != nil {
 		return fmt.Errorf("html.Preview: %w", err)
 	}
+
 	select {
-	case err := <-done:
+	case err := <-errChan:
 		return err
 	case <-time.After(5 * time.Second):
 		return errors.New("timed out")
