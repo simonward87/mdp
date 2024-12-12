@@ -14,8 +14,6 @@ import (
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
-	"github.com/tdewolff/minify/v2"
-	"github.com/tdewolff/minify/v2/html"
 
 	"mdp/web"
 )
@@ -24,25 +22,17 @@ import (
 // safe HTML. This HTML is then embedded into a template – either a user
 // defined template, or the default embedded template – written to a
 // buffer, and then the final output is returned as a byte slice
-func Convert(inputFilename, templateFilename string) ([]byte, error) {
+func Convert(inputName, templateName string) ([]byte, error) {
 	var buf bytes.Buffer
-	var err error
-	var t *template.Template
 
-	switch templateFilename {
-	case "": // embedded template
-		templateFilename = "template/default.min.tmpl"
-		t, err = template.ParseFS(web.FS, templateFilename)
-	default: // user-provided template
-		t, err = template.ParseFiles(templateFilename)
-	}
+	t, err := loadTemplate(&templateName)
 	if err != nil {
-		return nil, fmt.Errorf("parse %s: %w", templateFilename, err)
+		return nil, fmt.Errorf("parse %s: %w", templateName, err)
 	}
 
-	markdown, err := os.ReadFile(inputFilename)
+	markdown, err := os.ReadFile(inputName)
 	if err != nil {
-		return nil, fmt.Errorf("read file %s: %w", inputFilename, err)
+		return nil, fmt.Errorf("read file %s: %w", inputName, err)
 	}
 
 	content, err := generateHTML(markdown)
@@ -60,25 +50,28 @@ func Convert(inputFilename, templateFilename string) ([]byte, error) {
 	return buf.Bytes(), err
 }
 
-func generateHTML(markdown []byte) ([]byte, error) {
-	b := bluemonday.UGCPolicy().SanitizeBytes(markdown)
-	if len(b) == 0 {
-		return nil, errors.New("sanitize: malformed input")
+func loadTemplate(name *string) (*template.Template, error) {
+	switch *name {
+	case "": // embedded template
+		*name = "template/default.min.tmpl"
+		return template.ParseFS(web.FS, *name)
+	default: // user-provided template
+		return template.ParseFiles(*name)
 	}
+}
 
-	b = blackfriday.Run(b)
+func generateHTML(markdown []byte) ([]byte, error) {
+	b := blackfriday.Run(markdown)
 	if len(b) == 0 {
 		return nil, errors.New("render: malformed input")
 	}
 
-	m := minify.New()
-	m.AddFunc("text/html", html.Minify)
-
-	out, err := m.Bytes("text/html", b)
-	if err != nil {
-		return nil, fmt.Errorf("minify: %w", err)
+	b = bluemonday.UGCPolicy().SanitizeBytes(b)
+	if len(b) == 0 {
+		return nil, errors.New("sanitize: malformed input")
 	}
-	return out, nil
+
+	return b, nil
 }
 
 // CreateFile takes HTML data and writes to a file with a generated
@@ -101,12 +94,12 @@ func CreateFile(data []byte) error {
 	return nil
 }
 
-// Preview takes data, the HTML byte slice, and errChan, a channel to signal
+// Preview takes data, the HTML byte slice, and ch, a channel to signal
 // completion. It creates a server, and serves the HTML on a dynamically
 // assigned port – and then launches a browser, and navigates to that
-// port. Once the server has sent the HTML response, errChan signals to
+// port. Once the server has sent the HTML response, ch signals to
 // the main thread that it can safely exit.
-func Preview(data []byte, errChan chan<- error) error {
+func Preview(data []byte, ch chan<- error) error {
 	// Define OS-specific command
 	cmd := defineCommand()
 	if cmd.executable == "" {
@@ -144,14 +137,15 @@ func Preview(data []byte, errChan chan<- error) error {
 		m := http.NewServeMux()
 		m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
-			_, err = w.Write(data)
-			if err != nil {
-				err = fmt.Errorf("write HTTP response: %w", err)
+
+			if _, err = w.Write(data); err != nil {
+				ch <- fmt.Errorf("write HTTP response: %w", err)
 			}
-			errChan <- err
+			ch <- nil
 		})
+
 		if err := http.Serve(l, m); err != nil {
-			errChan <- fmt.Errorf("serve HTTP: %w", err)
+			ch <- fmt.Errorf("serve HTTP: %w", err)
 		}
 	}()
 

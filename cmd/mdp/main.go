@@ -38,13 +38,13 @@ func run() error {
 		os.Exit(1)
 	}
 
-	data, err := html.Convert(opts.targetFile, opts.templateFile)
+	body, err := html.Convert(opts.targetFile, opts.templateFile)
 	if err != nil {
 		return fmt.Errorf("html.Convert: %w", err)
 	}
 
 	if opts.skipPreview {
-		if err := html.CreateFile(data); err != nil {
+		if err := html.CreateFile(body); err != nil {
 			return fmt.Errorf("html.CreateFile: %w", err)
 		}
 		return nil
@@ -53,7 +53,7 @@ func run() error {
 	errChan := make(chan error)
 	defer close(errChan)
 
-	if err := html.Preview(data, errChan); err != nil {
+	if err := html.Preview(body, errChan); err != nil {
 		return fmt.Errorf("html.Preview: %w", err)
 	}
 
@@ -61,6 +61,6 @@ func run() error {
 	case err := <-errChan:
 		return err
 	case <-time.After(5 * time.Second):
-		return errors.New("timed out")
+		return errors.New("server timed out")
 	}
 }
