@@ -205,6 +205,12 @@
 
         --clr-border: #fff2;
       }
+
+      *,
+      ::before,
+      ::after {
+        text-rendering: geometricPrecision;
+      }
     }
 
     /* Remove all animations, transitions and smooth scroll for people */
@@ -221,15 +227,6 @@
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
-      }
-
-      @supports (text-rendering: geometricPrecision) {
-
-        *,
-        ::before,
-        ::after {
-          text-rendering: geometricPrecision;
-        }
       }
     }
   </style>
