@@ -1,6 +1,6 @@
 # Markdown Preview Tool
 
-Opinionated command line tool for previewing markdown files. Built as a learning exercise, but also because I needed a tool to preview my markdown.
+Opinionated command line tool for previewing markdown files. Built as a learning exercise, and also because I needed a tool to preview markdown.
 
 ## Minification
 

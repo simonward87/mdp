@@ -8,6 +8,7 @@
   <style>
     :root {
       color-scheme: only light;
+      font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
 
       /* foreground */
       --clr-fg-0: #000000;
@@ -28,7 +29,7 @@
       --spc-3: calc(var(--spc-0) * 8);
       --spc-4: calc(var(--spc-0) * 16);
 
-      --doc-width: 43.125rem;
+      --doc-width: 43rem;
     }
 
     /* Set root defaults */
@@ -41,6 +42,8 @@
     ::before,
     ::after {
       box-sizing: border-box;
+      overflow-wrap: break-word;
+      text-rendering: geometricPrecision;
     }
 
     /* Make images easier to work with */
@@ -63,11 +66,9 @@
       color: var(--clr-fg-1);
       display: flex;
       flex-direction: column;
-      font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
       margin: 0 auto;
       max-width: var(--doc-width);
       min-height: 100vh;
-      overflow-wrap: break-word;
     }
 
     @supports(min-height: 100dvh) {
@@ -80,9 +81,15 @@
     ul,
     ol {
       font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-      font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
-      line-height: 1.45;
+      font-size: 1.25rem;
+      line-height: 1.4;
       margin-block: var(--spc-1);
+      text-wrap: pretty;
+    }
+
+    ul,
+    ol {
+      margin-block: var(--spc-2);
     }
 
     h1,
@@ -98,34 +105,40 @@
     }
 
     h1 {
-      font-size: clamp(2rem, 1.5rem + 2.5vw, 2.5rem);
+      font-size: clamp(2rem, 1.75rem + 1.25vw, 2.25rem);
     }
 
     h2 {
-      font-size: clamp(1.75rem, 1.5rem + 1.25vw, 2rem);
+      font-size: clamp(1.8125rem, 1.625rem + 0.9375vw, 2rem);
     }
 
     h3 {
-      font-size: clamp(1.5rem, 1.25rem + 1.25vw, 1.75rem);
+      font-size: clamp(1.625rem, 1.5rem + 0.625vw, 1.75rem);
     }
 
     h4 {
-      font-size: clamp(1.34375rem, 1.1875rem + 0.7813vw, 1.5rem);
+      font-size: clamp(1.4375rem, 1.3125rem + 0.625vw, 1.5625rem);
     }
 
     h5 {
-      font-size: clamp(1.15625rem, 0.9688rem + 0.9375vw, 1.34375rem);
+      font-size: clamp(1.25rem, 1.125rem + 0.625vw, 1.375rem);
     }
 
     h6 {
-      font-size: clamp(1rem, 0.8438rem + 0.7813vw, 1.15625rem);
+      font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
     }
 
     table {
-      border-radius: var(--spc-1);
+      border-radius: var(--spc-0);
       border: 1px solid var(--clr-border);
+      font-size: 1.125rem;
+      line-height: 1.35;
       padding: var(--spc-1);
       margin: var(--spc-2) 0;
+    }
+
+    thead {
+      color: var(--clr-fg-0);
     }
 
     td,
@@ -136,19 +149,19 @@
 
     code {
       background-color: var(--clr-bg-1);
-      border-radius: 3px;
+      border-radius: var(--spc-0);
       border: 1px solid var(--clr-bg-2);
       font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-      font-size: 0.875rem;
+      font-size: 0.875em;
       font-weight: normal;
       padding: 1px 4px 0px;
     }
 
     pre {
       background-color: var(--clr-bg-1);
-      border-radius: 3px;
+      border-radius: var(--spc-0);
       border: 1px solid var(--clr-bg-2);
-      line-height: 1.2;
+      line-height: 1.25;
       margin-block: var(--spc-2);
       overflow-x: scroll;
       padding: var(--spc-2);
@@ -204,12 +217,6 @@
         --clr-bg-2: #323232;
 
         --clr-border: #fff2;
-      }
-
-      *,
-      ::before,
-      ::after {
-        text-rendering: geometricPrecision;
       }
     }
 
