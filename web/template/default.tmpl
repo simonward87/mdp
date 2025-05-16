@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,interactive-widget=resizes-content">
   <title>{{ .Title }}</title>
   <style>
     :root {
@@ -29,7 +29,11 @@
       --spc-3: calc(var(--spc-0) * 8);
       --spc-4: calc(var(--spc-0) * 16);
 
-      --doc-width: 43rem;
+      --doc-width: 42.5rem;
+    }
+
+    html {
+      height: 100%;
     }
 
     /* Set root defaults */
@@ -68,28 +72,28 @@
       flex-direction: column;
       margin: 0 auto;
       max-width: var(--doc-width);
-      min-height: 100vh;
+      min-height: 100%;
     }
 
-    @supports(min-height: 100dvh) {
-      body {
-        min-height: 100dvh;
-      }
+    p,
+    ul,
+    ol,
+    table {
+      font-size: clamp(1.0625rem, 0.9638rem + 0.5263vw, 1.1875rem);
     }
 
     p,
     ul,
     ol {
       font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-      font-size: 1.25rem;
-      line-height: 1.4;
-      margin-block: var(--spc-1);
+      line-height: 1.45;
+      margin-block: 0.625em;
       text-wrap: pretty;
     }
 
     ul,
     ol {
-      margin-block: var(--spc-2);
+      margin-block: 1.25em;
     }
 
     h1,
@@ -131,10 +135,9 @@
     table {
       border-radius: var(--spc-0);
       border: 1px solid var(--clr-border);
-      font-size: 1.125rem;
       line-height: 1.35;
       padding: var(--spc-1);
-      margin: var(--spc-2) 0;
+      margin: 1.25em 0;
     }
 
     thead {
@@ -152,7 +155,7 @@
       border-radius: var(--spc-0);
       border: 1px solid var(--clr-bg-2);
       font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-      font-size: 0.875em;
+      font-size: clamp(0.8125rem, 0.7632rem + 0.2632vw, 0.875rem);
       font-weight: normal;
       padding: 1px 4px 0px;
     }
@@ -161,8 +164,8 @@
       background-color: var(--clr-bg-1);
       border-radius: var(--spc-0);
       border: 1px solid var(--clr-bg-2);
-      line-height: 1.25;
-      margin-block: var(--spc-2);
+      line-height: 1.4;
+      margin-block: 1.25em;
       overflow-x: scroll;
       padding: var(--spc-2);
     }

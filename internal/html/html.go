@@ -25,9 +25,9 @@ import (
 func Convert(inputName, templateName string) ([]byte, error) {
 	var buf bytes.Buffer
 
-	t, err := loadTemplate(&templateName)
+	t, err := parseTemplate(&templateName)
 	if err != nil {
-		return nil, fmt.Errorf("parse %s: %w", templateName, err)
+		return nil, fmt.Errorf("parse template %q: %w", templateName, err)
 	}
 
 	markdown, err := os.ReadFile(inputName)
@@ -50,7 +50,7 @@ func Convert(inputName, templateName string) ([]byte, error) {
 	return buf.Bytes(), err
 }
 
-func loadTemplate(name *string) (*template.Template, error) {
+func parseTemplate(name *string) (*template.Template, error) {
 	switch *name {
 	case "": // embedded template
 		*name = "template/default.min.tmpl"
@@ -103,13 +103,13 @@ func Preview(data []byte, ch chan<- error) error {
 	// Define OS-specific command
 	cmd := defineCommand()
 	if cmd.executable == "" {
-		return errors.New("OS not supported")
+		return errors.New("operating system not supported")
 	}
 
 	// Locate executable in PATH
 	cmdPath, err := exec.LookPath(cmd.executable)
 	if err != nil {
-		return fmt.Errorf("search for executable: %w", err)
+		return fmt.Errorf("search path for executable: %w", err)
 	}
 
 	// Open listener so the browser knows to wait for a response

@@ -13,7 +13,7 @@ import (
 
 func main() {
 	if err := run(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "Run error: %s\n", err)
 		os.Exit(1)
 	}
 }
@@ -32,7 +32,7 @@ func run() error {
 	flag.StringVarP(&opts.templateFile, "template", "t", "", "Custom template file")
 	flag.Parse()
 
-	// When no target filename provided, display usage
+	// Display usage when no target filename provided
 	if opts.targetFile == "" {
 		flag.Usage()
 		os.Exit(1)
@@ -40,12 +40,12 @@ func run() error {
 
 	body, err := html.Convert(opts.targetFile, opts.templateFile)
 	if err != nil {
-		return fmt.Errorf("html.Convert: %w", err)
+		return fmt.Errorf("convert HTML: %w", err)
 	}
 
 	if opts.skipPreview {
 		if err := html.CreateFile(body); err != nil {
-			return fmt.Errorf("html.CreateFile: %w", err)
+			return fmt.Errorf("create file: %w", err)
 		}
 		return nil
 	}
@@ -54,7 +54,7 @@ func run() error {
 	defer close(errChan)
 
 	if err := html.Preview(body, errChan); err != nil {
-		return fmt.Errorf("html.Preview: %w", err)
+		return fmt.Errorf("preview HTML: %w", err)
 	}
 
 	select {
