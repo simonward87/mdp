@@ -19,26 +19,31 @@ func main() {
 }
 
 type Options struct {
+	help         bool
 	skipPreview  bool
-	targetFile   string
 	templateFile string
 }
 
 func run() error {
-	opts := Options{}
-
-	flag.StringVarP(&opts.targetFile, "file", "f", "", "Markdown file to preview")
+	var opts Options
+	flag.BoolVarP(&opts.help, "help", "h", false, "Show usage information")
 	flag.BoolVarP(&opts.skipPreview, "skip-preview", "s", false, "Skip preview and output to a file")
 	flag.StringVarP(&opts.templateFile, "template", "t", "", "Custom template file")
 	flag.Parse()
+	flag.Usage = usage
 
-	// Display usage when no target filename provided
-	if opts.targetFile == "" {
+	if len(os.Args) == 1 {
 		flag.Usage()
 		os.Exit(1)
 	}
+	if opts.help {
+		flag.Usage()
+		os.Exit(0)
+	}
 
-	body, err := html.Convert(opts.targetFile, opts.templateFile)
+	// TODO: Enable parsing of multiple files
+	target := os.Args[1]
+	body, err := html.Convert(target, opts.templateFile)
 	if err != nil {
 		return fmt.Errorf("convert HTML: %w", err)
 	}
@@ -63,4 +68,19 @@ func run() error {
 	case <-time.After(5 * time.Second):
 		return errors.New("server timed out")
 	}
+}
+
+func usage() {
+	fmt.Fprintf(
+		os.Stderr,
+		"%s - markdown preview\n\n",
+		os.Args[0],
+	)
+	fmt.Fprintf(os.Stderr, "Usage: mdp [options] file\n\n")
+	flag.PrintDefaults()
+	fmt.Fprintf(
+		os.Stderr,
+		"\nDeveloped by Simon Ward. Copyright %d.\n",
+		time.Now().Year(),
+	)
 }
