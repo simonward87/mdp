@@ -53,7 +53,7 @@ func Convert(inputName, templateName string) ([]byte, error) {
 func parseTemplate(name *string) (*template.Template, error) {
 	switch *name {
 	case "": // embedded template
-		*name = "template/default.min.tmpl"
+		*name = "template/default.tmpl"
 		return template.ParseFS(web.FS, *name)
 	default: // user-provided template
 		return template.ParseFiles(*name)

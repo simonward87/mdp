@@ -16,7 +16,14 @@ start:
 ## build: compile production binaries
 .PHONY: build
 build:
+	@echo 'Minifying templates...'
+	@mv ./web/template/default.tmpl temp.default.tmpl
+	@minify -q -o ./web/template/default.tmpl temp.default.tmpl
 	@echo 'Building binaries...'
 	@go build -ldflags='-s -w' -o=./bin/darwin_arm64/mdp ./cmd/mdp/
 	@GOOS=linux GOARCH=arm64 go build -ldflags='-s -w' -o=./bin/linux_arm64/mdp ./cmd/mdp/
 	@echo 'Binaries built successfully'
+	@echo 'Restoring human-readable templates...'
+	@rm ./web/template/default.tmpl
+	@mv ./temp.default.tmpl ./web/template/default.tmpl
+	@echo 'Done'

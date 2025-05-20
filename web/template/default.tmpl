@@ -29,7 +29,7 @@
       --spc-3: calc(var(--spc-0) * 8);
       --spc-4: calc(var(--spc-0) * 16);
 
-      --doc-width: 42.5rem;
+      --doc-width: 43.75rem;
     }
 
     html {
@@ -79,14 +79,18 @@
     ul,
     ol,
     table {
-      font-size: clamp(1.0625rem, 0.9638rem + 0.5263vw, 1.1875rem);
+      /*
+        boundaries account for 20px inline padding, effective range 320-700px
+        min boundary = 280px (17.5rem) max boundary = 660px (41.25rem)
+      */
+      font-size: clamp(1.125rem, 1.0329rem + 0.5263vw, 1.25rem);
     }
 
     p,
     ul,
     ol {
       font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-      line-height: 1.45;
+      line-height: 1.35;
       margin-block: 0.625em;
       text-wrap: pretty;
     }
