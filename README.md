@@ -2,6 +2,10 @@
 
 Opinionated command line tool for previewing Markdown files. Built as a learning exercise, but also because I needed a tool to preview Markdown with an output style that fit my preferences.
 
+```sh
+$ mdp [OPTIONS] FILE
+```
+
 ## Minification
 
 Template is automatically minified at build time when using the Makefile `build` target, using the excellent [minify tool](https://github.com/tdewolff/minify) by [Taco de Wolff](https://github.com/tdewolff).
