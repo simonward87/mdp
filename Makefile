@@ -11,7 +11,7 @@ confirm:
 ## start: run markdown preview with example.md
 .PHONY: start
 start:
-	@go run ./cmd/mdp/ -f ./example.md
+	@go run ./cmd/mdp/ ./example.md
 
 ## build: compile production binaries
 .PHONY: build
