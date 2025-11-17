@@ -111,6 +111,8 @@
     }
 
     body {
+      display: flex;
+      flex-direction: column;
       min-height: 100%;
     }
 
@@ -227,9 +229,11 @@
       margin-inline: auto;
       max-width: 42.5rem;
       padding-inline: 1.25rem;
+      width: 100%;
     }
 
     main {
+      flex-grow: 1;
       margin-block: 2.5rem;
 
       p,
@@ -243,6 +247,10 @@
         list-style-type: square;
         margin-block: 1.25em;
         text-wrap: pretty;
+      }
+
+      h1:first-of-type {
+        margin-block-start: -0.2em;
       }
 
       ::marker {
