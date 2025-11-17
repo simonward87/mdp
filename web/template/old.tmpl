@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,interactive-widget=resizes-content">
+  <title>{{ .Title }}</title>
+  <style>
+    :root {
+      color-scheme: only light;
+      font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+
+      /* foreground */
+      --clr-fg-0: #111111;
+      --clr-fg-1: #3d3d3d;
+      --clr-fg-2: #696969;
+
+      /* background */
+      --clr-bg-0: #ffffff;
+      --clr-bg-1: #f5f5f5;
+      --clr-bg-2: #eaeaea;
+
+      --clr-border: #0002;
+
+      /* padding */
+      --spc-0: 0.3125rem;
+      --spc-1: calc(var(--spc-0) * 2);
+      --spc-2: calc(var(--spc-0) * 4);
+      --spc-3: calc(var(--spc-0) * 8);
+      --spc-4: calc(var(--spc-0) * 16);
+
+      --doc-width: 43.75rem;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    /* Set root defaults */
+    html:focus-within {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--spc-4);
+    }
+
+    *,
+    ::before,
+    ::after {
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+      text-rendering: geometricPrecision;
+    }
+
+    /* Make images easier to work with */
+    img,
+    picture {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* Inherit fonts for inputs and buttons */
+    input,
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    body {
+      background-color: var(--clr-bg-0);
+      color: var(--clr-fg-1);
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+      max-width: var(--doc-width);
+      min-height: 100%;
+    }
+
+    p,
+    ul,
+    ol,
+    table {
+      /*
+        boundaries account for 20px inline padding, effective range 320-700px
+        min boundary = 280px (17.5rem) max boundary = 660px (41.25rem)
+      */
+      font-size: clamp(1.125rem, 1.0329rem + 0.5263vw, 1.25rem);
+    }
+
+    p,
+    ul,
+    ol {
+      font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
+      line-height: 1.4;
+      margin-block: 0.625em;
+      text-wrap: pretty;
+    }
+
+    /* ul, */
+    /* ol { */
+    /*   margin-block: 1.25em; */
+    /* } */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: var(--clr-fg-0);
+      font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+      line-height: calc(0.85rem + 0.8em);
+      margin-block: 1.25em 0.625em;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 1.75rem + 1.25vw, 2.25rem);
+    }
+
+    h2 {
+      font-size: clamp(1.8125rem, 1.625rem + 0.9375vw, 2rem);
+    }
+
+    h3 {
+      font-size: clamp(1.625rem, 1.5rem + 0.625vw, 1.75rem);
+    }
+
+    h4 {
+      font-size: clamp(1.4375rem, 1.3125rem + 0.625vw, 1.5625rem);
+    }
+
+    h5 {
+      font-size: clamp(1.25rem, 1.125rem + 0.625vw, 1.375rem);
+    }
+
+    h6 {
+      font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+    }
+
+    table {
+      border-radius: var(--spc-0);
+      border: 1px solid var(--clr-border);
+      line-height: 1.35;
+      padding: var(--spc-1);
+      margin: 1.25em 0;
+    }
+
+    thead {
+      color: var(--clr-fg-0);
+    }
+
+    td,
+    th {
+      padding: var(--spc-1);
+      text-align: left;
+    }
+
+    code {
+      background-color: var(--clr-bg-1);
+      border-radius: var(--spc-0);
+      border: 1px solid var(--clr-bg-2);
+      font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+      font-size: clamp(0.8125rem, 0.7632rem + 0.2632vw, 0.875rem);
+      font-weight: normal;
+      padding: 1px 4px 0px;
+      vertical-align: middle;
+    }
+
+    pre {
+      background-color: var(--clr-bg-1);
+      border-radius: var(--spc-0);
+      border: 1px solid var(--clr-bg-2);
+      line-height: 1.4;
+      margin-block: 1.25em;
+      overflow-x: scroll;
+      padding: var(--spc-2);
+    }
+
+    pre code {
+      background-color: initial;
+      border: none;
+      padding: initial;
+      vertical-align: initial;
+    }
+
+    strong {
+      color: var(--clr-fg-0);
+    }
+
+    main {
+      flex-grow: 1;
+      padding: var(--spc-4) var(--spc-2);
+    }
+
+    main> :first-child {
+      margin-top: -0.22em;
+    }
+
+    main> :last-child {
+      margin-bottom: -0.12em;
+    }
+
+    footer {
+      color: var(--clr-fg-2);
+      font-size: clamp(0.75rem, 0.6875rem + 0.3125vw, 0.8125rem);
+      font-weight: 500;
+      padding: var(--spc-3) var(--spc-2);
+    }
+
+    footer div {
+      line-height: 1;
+      margin-block: -1px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: only dark;
+
+        /* foreground */
+        --clr-fg-0: #eeeeee;
+        --clr-fg-1: #c4c4c4;
+        --clr-fg-2: #999999;
+
+        /* background */
+        --clr-bg-0: #1d1d1d;
+        --clr-bg-1: #282828;
+        --clr-bg-2: #323232;
+
+        --clr-border: #fff2;
+      }
+    }
+
+    /* Remove all animations, transitions and smooth scroll for people */
+    /* that prefer not to see them */
+    @media (prefers-reduced-motion: reduce) {
+      html:focus-within {
+        scroll-behavior: auto;
+      }
+
+      *,
+      ::before,
+      ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    {{ .Body }}
+  </main>
+  <footer>
+    <div>
+      Preview built with <a href="https://github.com/simonward87/mdp">MDP</a> &copy; <span
+        class="current-year">2024</span>. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    function setFooterYear() {
+      const year = document.querySelector("footer .current-year");
+      if (!year) {
+        console.warn("setFooterYear: Node 'footer .current-year' not found!");
+        return;
+      }
+      year.textContent = new Date().getFullYear();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      setFooterYear();
+    });
+  </script>
+</body>
+
+</html>
