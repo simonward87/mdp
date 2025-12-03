@@ -35,12 +35,13 @@
       overflow-wrap: anywhere;
       tab-size: 4;
       text-rendering: geometricPrecision;
+
+      &:focus-within {
+        scroll-behavior: smooth;
+        scroll-padding-top: var(--spc-2);
+      }
     }
 
-    html:focus-within {
-      scroll-behavior: smooth;
-      scroll-padding-top: var(--spc-2);
-    }
 
     img,
     picture {
@@ -90,9 +91,9 @@
       font-optical-sizing: auto;
       font-size: 0.9375rem;
       font-variation-settings: "wdth" 100;
-      font-weight: 600;
+      font-weight: 550;
       line-height: 1.4;
-      padding: 0 0.3125em;
+      padding: 0 0.3125em 0.0625em;
 
       /* FIXME: */
       /* The - character is considered as whitespace, which means code */
@@ -134,7 +135,7 @@
     :root {
       --clr-bg-1: #fff;
       --clr-bg-2: #f5f5f5;
-      --clr-border: #0002;
+      --clr-border: #00000019;
       --clr-fg-1: #111;
       --clr-fg-2: #444444;
       --clr-fg-3: #767676;
@@ -151,7 +152,7 @@
       :root {
         --clr-bg-1: #282828;
         --clr-bg-2: #323232;
-        --clr-border: #fff2;
+        --clr-border: #ffffff19;
         --clr-fg-1: #f5f5f5;
         --clr-fg-2: #c2c2c2;
         --clr-fg-3: #8e8e8e;
@@ -162,7 +163,7 @@
     }
 
     :focus-visible {
-      border-radius: 0.125em;
+      border-radius: 0.0625em;
       outline-offset: 2px;
       outline: #d62839 solid 3px;
     }
@@ -177,10 +178,19 @@
       margin-block: 1.25em 0.625em;
     }
 
+    a {
+      text-decoration-thickness: 0.125em;
+      text-underline-offset: 0.125em;
+    }
+
     small {
       font-size: 0.8125rem;
       font-size: 0.75rem;
       font-weight: 500;
+    }
+
+    code {
+      color: var(--clr-fg-1);
     }
 
     pre {
@@ -208,6 +218,7 @@
       th {
         color: var(--clr-fg-1);
         padding-block-end: 0.625em;
+        padding-inline-end: 0.625rem;
         text-align: start;
       }
 
@@ -244,7 +255,6 @@
         color: var(--clr-fg-2);
         font-size: 1.0625rem;
         line-height: 1.45;
-        list-style-type: square;
         margin-block: 1.25em;
         text-wrap: pretty;
       }
@@ -253,7 +263,19 @@
         margin-block-start: -0.2em;
       }
 
-      ::marker {
+      ul {
+        list-style-type: square;
+
+        ul {
+          margin-block: 0;
+        }
+      }
+
+      li {
+        margin-block: 0.3125rem;
+      }
+
+      li::marker {
         color: var(--clr-fg-3);
       }
     }
