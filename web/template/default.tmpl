@@ -139,6 +139,7 @@
       --clr-fg-1: #111;
       --clr-fg-2: #444444;
       --clr-fg-3: #767676;
+      --clr-rule: #0002;
 
       background: var(--clr-bg-1);
       color: var(--clr-fg-1);
@@ -155,6 +156,7 @@
         --clr-fg-1: #f5f5f5;
         --clr-fg-2: #c2c2c2;
         --clr-fg-3: #8e8e8e;
+        --clr-rule: #fff2;
 
         color-scheme: only dark;
       }
@@ -210,6 +212,13 @@
         border: 1px solid var(--clr-border);
         margin-inline: initial;
       }
+    }
+
+    hr {
+      background-color: var(--clr-rule);
+      border: none;
+      height: 1px;
+      margin-block: 1.25rem;
     }
 
     table {
@@ -273,7 +282,7 @@
         }
       }
 
-      li + li {
+      li+li {
         margin-block-start: 0.3125rem;
       }
 
